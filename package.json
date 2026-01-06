@@ -12,9 +12,11 @@
     "preview": "vite preview",
     "prepare": "husky",
     "lint:script": "vue-tsc --noEmit",
+    "lint:script:staged": "vue-tsc --noEmit --skipLibCheck",
     "lint:style": "stylelint \"src/**/*.{css,scss,vue}\" --fix"
   },
   "dependencies": {
+    "@sentry/vue": "^10.32.1",
     "@vitejs/plugin-legacy": "^7.2.1",
     "@zzzzzzhaopu/vite-plugin-upload-sourcemap": "^1.0.0",
     "dompurify": "^3.3.1",
@@ -32,6 +34,7 @@
   "devDependencies": {
     "@commitlint/cli": "^20.3.0",
     "@commitlint/config-conventional": "^20.3.0",
+    "@sentry/vite-plugin": "^4.6.1",
     "@types/dompurify": "^3.0.5",
     "@types/markdown-it": "^14.1.2",
     "@types/marked": "^5.0.2",
@@ -55,8 +58,8 @@
     "vue-tsc": "^3.1.4"
   },
   "lint-staged": {
-    "*.{ts,tsx,vue}": [
-      "vue-tsc --noEmit"
+    "src/**/*.{ts,tsx,vue}": [
+      "bash -c 'npm run lint:script:staged'"
     ],
     "*.{css,scss,vue}": [
       "stylelint --fix"

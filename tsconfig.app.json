@@ -4,6 +4,22 @@
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
     "types": ["vite/client"],
 
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    },
+    
+    /* Module Resolution - 修复模块解析问题 */
+    "target": "ES2020",
+    "module": "ESNext",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "allowImportingTsExtensions": true,
+    
+    /* Skip Lib Check - 跳过第三方库的类型检查 */
+    "skipLibCheck": true,
+    
     /* Linting */
     "strict": true,
     "noUnusedLocals": true,
@@ -13,8 +29,8 @@
     "noUncheckedSideEffectImports": true
   },
   "include": [
-    "src/**/*.ts", 
-    "src/**/*.tsx", 
+    "src/**/*.ts",
+    "src/**/*.tsx",
     "src/**/*.vue",
     "auto-imports.d.ts",
     "components.d.ts"
