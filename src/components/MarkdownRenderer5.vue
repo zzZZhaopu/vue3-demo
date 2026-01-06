@@ -1,7 +1,7 @@
 <template>
   <div class="markdown-renderer markdown-renderer-5">
     <!-- 使用 v-html 渲染经过安全过滤的 HTML -->
-    <div class="markdown-body" v-html="sanitizedHtml"></div>
+    <div class="markdown-body" v-html="sanitizedHtml" />
   </div>
 </template>
 
@@ -45,7 +45,6 @@ const props = defineProps<Props>();
 const renderer = new marked.Renderer();
 
 // 自定义链接渲染（在新窗口打开外部链接）
-// @ts-ignore
 renderer.link = function(token: any) {
   const href = token.href;
   const title = token.title;
@@ -58,7 +57,6 @@ renderer.link = function(token: any) {
 };
 
 // 自定义代码块渲染（添加语言标签）
-// @ts-ignore
 renderer.code = function(token: any) {
   const code = token.text;
   const language = token.lang || 'plaintext';
@@ -68,16 +66,20 @@ renderer.code = function(token: any) {
   // 使用 highlight.js 高亮代码
   const highlighted = hljs.highlight(code, { language: validLang }).value;
   
+  // 生成一个唯一 ID 用于代码复制
+  const codeId = `code-${Math.random().toString(36).substr(2, 9)}`;
+  
   // 返回带语言标签的代码块
+  // 注意：不使用 onclick，而是通过 Vue 的事件监听处理复制
   return `
     <div class="code-block-wrapper">
       <div class="code-block-header">
         <span class="code-language">${validLang}</span>
-        <button class="code-copy-btn" onclick="navigator.clipboard.writeText(this.dataset.code)" data-code="${code.replace(/"/g, '&quot;')}">
+        <button class="code-copy-btn" data-code-id="${codeId}">
           复制
         </button>
       </div>
-      <pre><code class="hljs language-${validLang}">${highlighted}</code></pre>
+      <pre><code id="${codeId}" class="hljs language-${validLang}">${highlighted}</code></pre>
     </div>
   `;
 };
@@ -107,13 +109,16 @@ const purifyConfig = {
   ],
   // 允许的属性
   ALLOWED_ATTR: [
-    'href', 'title', 'target', 'rel',
-    'src', 'alt', 'width', 'height',
-    'class', 'id',
-    'onclick', 'data-code' // 复制按钮需要
+    'href', 'title', 'target', 'rel',      // 链接相关
+    'src', 'alt', 'width', 'height',       // 图片相关
+    'class', 'id',                         // 样式相关
+    'data-code-id'                         // 复制代码功能需要（安全）
+    // 注意：不包含 onclick 等事件属性，防止 XSS 攻击
   ],
   // 允许的 URI 协议
-  ALLOWED_URI_REGEXP: /^(?:(?:(?:f|ht)tps?|mailto|tel|callto|sms|cid|xmpp):|[^a-z]|[a-z+.\-]+(?:[^a-z+.\-:]|$))/i,
+  // 正则说明：匹配 https、http、mailto、tel 等安全协议
+  // [a-z+.-]+ 匹配域名部分（字母、加号、点、减号）
+  ALLOWED_URI_REGEXP: /^(?:(?:(?:f|ht)tps?|mailto|tel|callto|sms|cid|xmpp):|[^a-z]|[a-z+.-]+(?:[^a-z+.-:]|$))/i,
 };
 
 // ==================== 渲染逻辑 ====================
@@ -149,9 +154,47 @@ watch(
   () => props.content,
   () => {
     nextTick(() => {
-      // 重新高亮所有代码块
+      // 1. 重新高亮所有代码块
       document.querySelectorAll('.markdown-renderer-5 pre code:not(.hljs)').forEach((block) => {
         hljs.highlightElement(block as HTMLElement);
+      });
+      
+      // 2. 绑定复制按钮事件（安全的方式）
+      document.querySelectorAll('.markdown-renderer-5 .code-copy-btn').forEach((button) => {
+        // 移除旧的事件监听（避免重复绑定）
+        const newButton = button.cloneNode(true) as HTMLElement;
+        button.parentNode?.replaceChild(newButton, button);
+        
+        // 添加新的事件监听
+        newButton.addEventListener('click', async () => {
+          const codeId = newButton.getAttribute('data-code-id');
+          if (!codeId) return;
+          
+          const codeElement = document.getElementById(codeId);
+          if (!codeElement) return;
+          
+          try {
+            // 复制代码到剪贴板
+            await navigator.clipboard.writeText(codeElement.textContent || '');
+            
+            // 显示复制成功提示
+            const originalText = newButton.textContent;
+            newButton.textContent = '✓ 已复制';
+            newButton.style.backgroundColor = '#52c41a';
+            
+            // 2 秒后恢复
+            setTimeout(() => {
+              newButton.textContent = originalText;
+              newButton.style.backgroundColor = '';
+            }, 2000);
+          } catch (err) {
+            console.error('复制失败:', err);
+            newButton.textContent = '复制失败';
+            setTimeout(() => {
+              newButton.textContent = '复制';
+            }, 2000);
+          }
+        });
       });
     });
   },
@@ -192,42 +235,22 @@ watch(
       &:first-child {
         margin-top: 0;
       }
-      
-      // 标题前的装饰符号
-      &::before {
-        content: '#';
-        color: #667eea;
-        margin-right: 0.5em;
-        font-weight: bold;
-      }
     }
     
     :deep(h1) {
       font-size: 2em;
       border-bottom: 3px solid #667eea;
       padding-bottom: 0.3em;
-      
-      &::before {
-        content: '# ';
-      }
     }
     
     :deep(h2) {
       font-size: 1.5em;
       border-bottom: 2px solid #e1e4e8;
       padding-bottom: 0.3em;
-      
-      &::before {
-        content: '## ';
-      }
     }
     
     :deep(h3) {
       font-size: 1.25em;
-      
-      &::before {
-        content: '### ';
-      }
     }
     
     // ==================== 段落和文本 ====================

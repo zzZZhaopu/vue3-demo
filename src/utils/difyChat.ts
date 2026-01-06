@@ -270,7 +270,7 @@ export async function sendDifyStreamMessage(
     // 控制标志和缓冲区
     let isReading = true;
     let buffer = ""; // 用于暂存不完整的数据块
-    let fullResponse = ""; // 保存完整的响应内容
+    const fullResponse = ""; // 保存完整的响应内容
 
     // 循环读取流式数据
     while (isReading) {

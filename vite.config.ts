@@ -1,4 +1,5 @@
 import { defineConfig, loadEnv } from "vite";
+import path from "path";
 import vue from "@vitejs/plugin-vue";
 import viteCompression from "vite-plugin-compression";
 import stylelintPlugin from "vite-plugin-stylelint";
@@ -93,7 +94,7 @@ export default defineConfig(({ mode }) => {
     },
     resolve: {
       alias: {
-        "@": "/src",
+        "@": path.resolve(__dirname, "src"),
       },
       // 文件扩展名自动补全：导入模块时可以省略这些后缀名
       // 例：import App from './App' 会自动查找 App.vue、App.ts、App.js 等文件

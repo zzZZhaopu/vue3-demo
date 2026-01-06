@@ -1,7 +1,7 @@
 <template>
   <div class="markdown-compare-container">
     <h1>Markdown 渲染方案对比</h1>
-    
+
     <!-- 输入区域 -->
     <div class="input-section">
       <h2>测试内容</h2>
@@ -12,19 +12,19 @@
         placeholder="输入 Markdown 内容进行测试..."
       />
       <div class="preset-buttons">
-        <el-button @click="loadPreset1">加载示例 1（基础语法）</el-button>
-        <el-button @click="loadPreset2">加载示例 2（代码块）</el-button>
-        <el-button @click="loadPreset3">加载示例 3（综合测试）</el-button>
+        <el-button @click="loadPreset1"> 加载示例 1（基础语法） </el-button>
+        <el-button @click="loadPreset2"> 加载示例 2（代码块） </el-button>
+        <el-button @click="loadPreset3"> 加载示例 3（综合测试） </el-button>
       </div>
     </div>
-    
+
     <!-- 对比展示区域 -->
     <div class="compare-section">
       <!-- 方案三 -->
       <div class="renderer-card">
         <div class="card-header">
           <h3>方案三：marked + highlight.js</h3>
-          <el-tag type="success">手动集成</el-tag>
+          <el-tag type="success"> 手动集成 </el-tag>
         </div>
         <div class="card-desc">
           <p>✅ 最流行的组合</p>
@@ -35,12 +35,12 @@
           <MarkdownRenderer3 :content="markdownContent" />
         </div>
       </div>
-      
+
       <!-- 方案四 -->
       <div class="renderer-card">
         <div class="card-header">
           <h3>方案四：vue3-markdown-it</h3>
-          <el-tag type="primary">开箱即用</el-tag>
+          <el-tag type="primary"> 开箱即用 </el-tag>
         </div>
         <div class="card-desc">
           <p>✅ Vue 3 专用组件</p>
@@ -51,12 +51,12 @@
           <MarkdownRenderer4 :content="markdownContent" />
         </div>
       </div>
-      
+
       <!-- 方案五 -->
       <div class="renderer-card">
         <div class="card-header">
           <h3>方案五：marked + DOMPurify + highlight.js</h3>
-          <el-tag type="danger">最安全</el-tag>
+          <el-tag type="danger"> 最安全 </el-tag>
         </div>
         <div class="card-desc">
           <p>✅ XSS 防护最强</p>
@@ -72,10 +72,10 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
-import MarkdownRenderer3 from '@/components/MarkdownRenderer3.vue';
-import MarkdownRenderer4 from '@/components/MarkdownRenderer4.vue';
-import MarkdownRenderer5 from '@/components/MarkdownRenderer5.vue';
+import { ref } from "vue";
+import MarkdownRenderer3 from "@/components/MarkdownRenderer3.vue";
+import MarkdownRenderer4 from "@/components/MarkdownRenderer4.vue";
+import MarkdownRenderer5 from "@/components/MarkdownRenderer5.vue";
 
 // Markdown 内容
 const markdownContent = ref(`# 欢迎使用 Markdown 渲染器
@@ -236,7 +236,7 @@ fetchUsers().then(users => {
   padding: 20px;
   max-width: 1600px;
   margin: 0 auto;
-  
+
   h1 {
     text-align: center;
     font-size: 2em;
@@ -245,39 +245,39 @@ fetchUsers().then(users => {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
-  
+
   // 输入区域
   .input-section {
     margin-bottom: 30px;
     padding: 20px;
     background: white;
     border-radius: 12px;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-    
+    box-shadow: 0 2px 12px rgb(0 0 0 / 8%);
+
     h2 {
       margin-bottom: 16px;
       font-size: 1.5em;
     }
-    
+
     .preset-buttons {
       margin-top: 12px;
       display: flex;
       gap: 12px;
     }
   }
-  
+
   // 对比展示区域
   .compare-section {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
     gap: 20px;
-    
+
     .renderer-card {
       background: white;
       border-radius: 12px;
-      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+      box-shadow: 0 2px 12px rgb(0 0 0 / 8%);
       overflow: hidden;
-      
+
       .card-header {
         padding: 16px 20px;
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -285,39 +285,39 @@ fetchUsers().then(users => {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        
+
         h3 {
           margin: 0;
           font-size: 1.1em;
         }
       }
-      
+
       .card-desc {
         padding: 12px 20px;
         background: #f9fafb;
         border-bottom: 1px solid #e1e4e8;
-        
+
         p {
           margin: 4px 0;
           font-size: 13px;
           color: #6a737d;
         }
       }
-      
+
       .card-body {
         padding: 20px;
         max-height: 600px;
         overflow-y: auto;
-        
+
         // 自定义滚动条
         &::-webkit-scrollbar {
           width: 6px;
         }
-        
+
         &::-webkit-scrollbar-thumb {
           background: #dcdfe6;
           border-radius: 3px;
-          
+
           &:hover {
             background: #c0c4cc;
           }

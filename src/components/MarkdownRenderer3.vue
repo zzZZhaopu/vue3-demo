@@ -1,7 +1,7 @@
 <template>
   <div class="markdown-renderer markdown-renderer-3">
     <!-- 使用 v-html 渲染 Markdown -->
-    <div class="markdown-body" v-html="renderedHtml"></div>
+    <div class="markdown-body" v-html="renderedHtml" />
   </div>
 </template>
 
@@ -116,7 +116,7 @@ watch(
     font-size: 14px;
     line-height: 1.8;
     color: #24292e;
-    word-wrap: break-word;
+    overflow-wrap: break-word;
     
     // ==================== 标题 ====================
     
@@ -184,9 +184,9 @@ watch(
       padding: 0.2em 0.4em;
       margin: 0;
       font-size: 85%;
-      background-color: rgba(175, 184, 193, 0.2);
+      background-color: rgb(175 184 193 / 20%);
       border-radius: 6px;
-      font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+      font-family: SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
     }
     
     :deep(pre) {
@@ -211,7 +211,7 @@ watch(
     // ==================== 引用 ====================
     
     :deep(blockquote) {
-      margin: 0 0 16px 0;
+      margin: 0 0 16px;
       padding: 0 1em;
       color: #6a737d;
       border-left: 0.25em solid #dfe2e5;
